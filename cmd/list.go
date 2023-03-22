@@ -11,7 +11,7 @@ var listCmd = &cobra.Command{
 	Use:   "list",
 	Short: "List documents",
 	Long:  `List documents`,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(_ *cobra.Command, _ []string) {
 
 		if err := conf.Read(); err != nil {
 			fmt.Println("No config found, login first.")

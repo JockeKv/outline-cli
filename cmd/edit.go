@@ -5,15 +5,17 @@ import (
 	"outline/pkg/api"
 	"outline/pkg/editor"
 	"strings"
+	"unicode"
 
 	"github.com/spf13/cobra"
+	"golang.org/x/text/runes"
 )
 
 var editCmd = &cobra.Command{
 	Use:   "edit",
 	Short: "Edit a document",
 	Long:  `Edit a document`,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(_ *cobra.Command, args []string) {
 		if len(args) < 2 {
 			fmt.Println("Provide ID for document to edit.")
 			return
@@ -53,7 +55,7 @@ func init() {
 	rootCmd.AddCommand(editCmd)
 }
 
-func completeDocs(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
+func completeDocs(_ *cobra.Command, args []string, _ string) ([]string, cobra.ShellCompDirective) {
 	if err := conf.Read(); err != nil {
 		return []string{"error"}, cobra.ShellCompDirectiveDefault
 	}
@@ -80,10 +82,27 @@ func completeDocs(cmd *cobra.Command, args []string, toComplete string) ([]strin
 		}
 		argsList := []string{}
 		for _, doc := range *docs {
-			name := strings.ToLower(strings.ReplaceAll(*doc.Title, " ", "-"))
-			argsList = append(argsList, fmt.Sprintf("%s-%s\t%s", name, *doc.UrlId, *doc.CollectionId))
+			// name := strings.ToLower(strings.ReplaceAll(*doc.Title, " ", "-"))
+			// FIXME: Should create URL-friendly titles for non-english characters
+			// Should work with Swedish and Japanese
+			argsList = append(argsList, fmt.Sprintf("%s\t%s", *doc.UrlId, *doc.Title))
 		}
 		return argsList, cobra.ShellCompDirectiveDefault
 	}
 	return []string{""}, cobra.ShellCompDirectiveError
+}
+
+// TODO: URLify titles?
+func urlify(c rune) rune {
+	runes.In(unicode.Common)
+	return c
+}
+
+func titleToUrl(title string) string {
+	title = strings.ToLower(title) // To lowercase
+	title = strings.ReplaceAll(title, " ", "-")
+	title = strings.ReplaceAll(title, "å", "a")
+	title = strings.ReplaceAll(title, "a", "a")
+
+	return title
 }

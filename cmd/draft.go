@@ -108,7 +108,7 @@ func init() {
 	draftCmd.RegisterFlagCompletionFunc("collection", completeCollection)
 }
 
-func completeDrafts(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
+func completeDrafts(_ *cobra.Command, _ []string, _ string) ([]string, cobra.ShellCompDirective) {
 	if err := conf.Read(); err != nil {
 		return []string{"error"}, cobra.ShellCompDirectiveDefault
 	}
@@ -125,7 +125,7 @@ func completeDrafts(cmd *cobra.Command, args []string, toComplete string) ([]str
 	return argsList, cobra.ShellCompDirectiveDefault
 }
 
-func completeCollection(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
+func completeCollection(_ *cobra.Command, _ []string, _ string) ([]string, cobra.ShellCompDirective) {
 	if err := conf.Read(); err != nil {
 		return []string{"error"}, cobra.ShellCompDirectiveDefault
 	}

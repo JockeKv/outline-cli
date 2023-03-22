@@ -13,7 +13,7 @@ var loginCmd = &cobra.Command{
 	Short: "Login to an HedgeDoc account",
 	Long: `For initial use you must specify the server with --server and token with --token.
 If you just want to make a login request again, you can omit these flags.`,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(cmd *cobra.Command, _ []string) {
 
 		if err := conf.Read(); err != nil {
 			fmt.Println("No config found, creating default config..")
